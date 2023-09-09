@@ -8,6 +8,7 @@
     <script src="js/NullTable.js"></script>
     <script src="js/RequestHandler.js"></script>
     <script src="js/Listeners.js"></script>
+    <script src="js/StorageWork.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
         body {
@@ -161,8 +162,6 @@
             text-align: center;
             font-size: 20px;
             color: #ff00d7;
-            opacity: 1;
-            transition: opacity 0.7s;
         }
 
     </style>
@@ -195,7 +194,7 @@
                         </div>
                         <div id="y-input">
                             <label for="y-input">Изменение по Y (-5 ... 5):</label>
-                            <input type="text" class="y-text" maxlength="17" id="y-value" name="y-value" oninput="careInput(event)" required>
+                            <input type="text" class="y-text" maxlength="7" id="y-value" name="y-value" oninput="careInput(event)" required>
                         </div>
                         <div id="r-input">
                             <label for="r-input">Изменение по R:</label>

@@ -1,20 +1,12 @@
-function nullTable() {
-    $('#table').html(`<tr>
-        <th>Result</th>
-        <th>X</th>
-        <th>Y</th>
-        <th>R</th>
-        <th>Current Time</th>
-        <th>Script time</th>
-        </tr>`);
-
+window.addEventListener('load', function() {
     $.ajax({
         type: "POST",
         url: '../php/index.php',
         async: false,
-        data: { "clearF": "true"},
+        data: { "onLoad": "true"},
         success: function (data) {
-            console.log("cleared");
+            uploadData(data);
+            console.log("dataDone");
         },
         error: function (xhr, textStatus, err) {
             alert("readyState: " + xhr.readyState + "\n"+
@@ -24,5 +16,10 @@ function nullTable() {
                 "error: " + err);
         }
     });
+});
 
+
+function uploadData(data) {
+    const table = document.getElementById('table');
+    table.innerHTML = data;
 }

@@ -44,5 +44,5 @@ function  confirmValues(){
 
 function addElement(data) {
     const table = document.getElementById('table');
-    table.innerHTML += data;
+    table.innerHTML = data;
 }

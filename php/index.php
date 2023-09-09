@@ -1,6 +1,8 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 date_default_timezone_set('Europe/Moscow');
+session_start();
+
 
 function ifEnter($x, $y, $r){
     $resultF = false;
@@ -22,9 +24,49 @@ function ifEnter($x, $y, $r){
     return $resultF;
 }
 
+if (!isset($_SESSION['tableD'])) {
+    $_SESSION['tableD'] = "
+        <tr>
+        <th>Result</th>
+        <th>X</th>
+        <th>Y</th>
+        <th>R</th>
+        <th>Current Time</th>
+        <th>Script time</th>
+        </tr>";
+}
+
+
 $curTime = date("H:i:s");
 $arrayOfX = array(-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2);
 $arrayOfR = array(1, 1.5, 2, 2.5, 3);
+
+if(isset($_POST["onLoad"])){
+    if ($_POST["onLoad"] == "true"){
+        exit($_SESSION['tableD']);
+    }else{
+        echo '<script>alert("bad arg for onLoad");</script>';
+        exit();
+    }
+}
+
+if(isset($_POST["clearF"])){
+    if ($_POST["clearF"] == "true"){
+        $_SESSION['tableD'] = "
+            <tr>
+            <th>Result</th>
+            <th>X</th>
+            <th>Y</th>
+            <th>R</th>
+            <th>Current Time</th>
+            <th>Script time</th>
+            </tr>";
+        exit();
+    }else{
+        echo '<script>alert("bad arg for clearF");</script>';
+        exit();
+    }
+}
 
 if ((isset($_POST["x"]) && isset($_POST["y"]) && isset($_POST["r"]))){
     $uncheckedX = $_POST["x"];
@@ -35,7 +77,7 @@ if ((isset($_POST["x"]) && isset($_POST["y"]) && isset($_POST["r"]))){
         $x = floatval($uncheckedX);
         $y = floatval($uncheckedY);
         $r = floatval($uncheckedR);
-        if (in_array($x, $arrayOfX) && in_array($r, $arrayOfR) && $y > -5 && $y < 5){
+        if (in_array($x, $arrayOfX) && in_array($r, $arrayOfR) && $y > -5 && $y < 5 && strlen((string)$y) <= 7){
             $scriptStart = microtime(true);
             $checkResult = ifEnter($x, $y, $r);
             if ($checkResult){
@@ -44,7 +86,7 @@ if ((isset($_POST["x"]) && isset($_POST["y"]) && isset($_POST["r"]))){
                 $checkResultText = "False";
             }
             $scriptResultTime = round((microtime(true) - $scriptStart) * 1000000, 1);
-            exit("
+            $_SESSION['tableD'] = $_SESSION['tableD'] . "
             <tr>
                 <th>$checkResultText</th>
                 <th>$x</th>
@@ -52,7 +94,8 @@ if ((isset($_POST["x"]) && isset($_POST["y"]) && isset($_POST["r"]))){
                 <th>$r</th>
                 <th>$curTime</th>
                 <th>$scriptResultTime</th>
-            </tr>");
+            </tr>";
+            exit($_SESSION['tableD']);
         }else{
             // header("HTTP/1.1 400 Bad Request");
             echo '<script>alert("Something wrong with X Y R, seems like some values are not in range");</script>';
